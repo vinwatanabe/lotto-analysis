@@ -88,6 +88,23 @@ export default async function Home() {
 
   const least10BonusNumbers = getLeast10BonusNumbers();
 
+  // ANALYSE THE DISTANCE BETWEEN THE NUMBERS
+  const getDistanceBetweenNumbers = () => {
+    const distanceCount: { [key: number]: number } = {};
+    lottoData.forEach((objData) => {
+      // Sort the numbers array to ensure consecutive order
+      const sortedNumbers = [...objData.numbers].sort((a, b) => a - b);
+
+      for (let i = 1; i < sortedNumbers.length; i++) {
+        const difference = sortedNumbers[i] - sortedNumbers[i - 1];
+        distanceCount[difference] = (distanceCount[difference] || 0) + 1;
+      }
+    });
+    return distanceCount;
+  };
+
+  const numberDistances = Object.entries(getDistanceBetweenNumbers());
+
   return (
     <div className='flex flex-col gap-10 mx-2.5 md:mx-20 my-12 text-center'>
       <div>
@@ -135,6 +152,14 @@ export default async function Home() {
         <h2 className='text-2xl font-bold'>10 Least Frequent Bonus Numbers:</h2>
 
         <ChartBox frequency={least10BonusNumbers} />
+      </div>
+
+      <hr />
+
+      <div>
+        <h2 className='text-2xl font-bold'>Distance Between Numbers:</h2>
+
+        <ChartBox frequency={numberDistances} />
       </div>
     </div>
   );
